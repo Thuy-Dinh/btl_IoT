@@ -82,8 +82,12 @@ app.post('/api/images', async (req, res) => {
   const { title, imageUrl } = req.body;
 
   try {
+    // Log chi tiết để theo dõi quá trình upload
+    console.log('Uploading image to Cloudinary...');
+    
     // Upload ảnh lên Cloudinary
     const uploadedImage = await cloudinary.uploader.upload(imageUrl);
+    console.log('Image uploaded successfully:', uploadedImage);
 
     // Lưu URL Cloudinary vào MongoDB
     const newImage = new Image({ title, imageUrl: uploadedImage.secure_url });
@@ -94,6 +98,7 @@ app.post('/api/images', async (req, res) => {
 
     res.status(201).json(newImage);
   } catch (error) {
+    console.error('Error uploading image:', error);
     res.status(500).json({ error: error.message });
   }
 });
